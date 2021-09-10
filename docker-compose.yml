@@ -1,0 +1,72 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: ../../настройка докера/docker-master
+      dockerfile: docker/nginx.docker
+    volumes:
+    - ./:/var/www
+    - ./docker/nginx/ssl:/etc/nginx/ssl
+    ports:
+    - "8080:443"
+    links:
+      - php-fpm
+
+  php-fpm:
+    build:
+      context: ../../настройка докера/docker-master
+      dockerfile: docker/php-fpm.docker
+    volumes:
+    - ./:/var/www
+    environment:
+      - "DB_PORT=3306"
+      - "DB_HOST=mysql"
+      - "REDIS_PORT=6379"
+      - "REDIS_HOST=redis"
+    links:
+      - mysql
+      - redis
+
+  php-cli:
+    build:
+      context: ../../настройка докера/docker-master
+      dockerfile: docker/php-cli.docker
+    volumes:
+    - ./:/var/www
+    environment:
+      - "DB_PORT=3306"
+      - "DB_HOST=mysql"
+      - "REDIS_PORT=6379"
+      - "REDIS_HOST=redis"
+    links:
+      - mysql
+      - redis
+    tty: true
+
+  mysql:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=get_fort
+    ports:
+    - "33061:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+          - VIRTUAL_HOST=localhost/phpmyadmin
+          - PMA_HOST=mysql
+          - PMA_USER=root
+          - PMA_PASSWORD=root
+    ports:
+    - "9080:80"
+  redis:
+    image: redis:3.0
+    ports:
+      - "63791:6379"
+  node:
+      image: node:13-alpine
+      volumes:
+        - ./:/var/www
+      working_dir: /var/www
+      tty: true
