@@ -31,8 +31,8 @@
 </body>
 </html>
 <?php
-//$email = "John@example.com";
-//$password = "secret";
+//$email = "Arlan@example.com";
+//$password = "sekret";
 //
 //$pdo = new PDO("mysql:host=mysql;dbname=get_fort","root","root");
 //$sql = "INSERT INTO users (email,password) VALUES (:email, :password)";
@@ -41,3 +41,5 @@
 //    "email" => $email,
 //    "password" => $password
 //]);
+//
+//var_dump($statement);
